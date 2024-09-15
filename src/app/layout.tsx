@@ -30,7 +30,7 @@ export default function RootLayout({
       <body
         className={cn(
           'min-h-screen font-sans antialiased grainy',
-          ` antialiased`
+          `${geistSans.variable} ${geistMono.variable} antialiased`
         )}
       >
         <Navbar />

@@ -1,11 +1,11 @@
-"use client";
+// "use client";
 
-import { useState } from "react";
-import {QueryClient} from "@tanstack/react-query"
+// import { useState } from "react";
+// import {QueryClient ,} from "@tanstack/react-query"
+// import { createTRPCClient } from "@trpc/client";
 
-const Providers = () => {
-  const [queryClient ]= useState(() => new QueryClient());
-  const [trpcClient ]= useState(() => new trpcClient());
-};
+// const Providers = () => {
+//   const [queryClient ]= useState(() => new QueryClient());
+// };
 
-export default Providers;
+// export default Providers;
