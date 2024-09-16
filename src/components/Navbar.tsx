@@ -36,7 +36,6 @@ const Navbar = () => {
               </LoginLink>
               <RegisterLink
                 className={buttonVariants({
-                 
                   size: "sm",
                 })}
               >
