@@ -15,10 +15,10 @@ const Page = () => {
 
   const { isSuccess } = trpc.authCallback.useQuery(undefined, {
     retry: (failureCount, error) => {
-      // if (failureCount > 3) {
-      //   router.push("/");
-      //   return false;
-      // }
+      if (failureCount > 3) {
+        router.push("/");
+        return false;
+      }
       if (error.data?.code === errorCode) {
         router.push("/sign-in");
         return false;
