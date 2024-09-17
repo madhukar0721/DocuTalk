@@ -3,17 +3,15 @@
 import { Loader2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { trpc } from "../_trpc/client";
-import { Suspense } from 'react'
+import { Suspense, useEffect } from "react";
 
 const Page = () => {
   const router = useRouter();
-
   const searchParams = useSearchParams();
-  const origin = searchParams.get("origin");
-  const errorCode = "UNAUTHORIZED";
-  // const errorCode = "BAD_GATEWAY";
+  const origin = searchParams.get("origin") || "/dashboard";
+  const errorCode = "UNAUTHORIZED"; // You can switch this to other error codes as needed
 
-  const { isSuccess } = trpc.authCallback.useQuery(undefined, {
+  const { isSuccess, isLoading } = trpc.authCallback.useQuery(undefined, {
     retry: (failureCount, error) => {
       if (failureCount > 3) {
         router.push("/");
@@ -27,33 +25,34 @@ const Page = () => {
     },
     retryDelay: 500,
   });
-  if (isSuccess) {
-    // user is synced to db
-    router.push(origin ? `/${origin}` : "/dashboard");
+
+  useEffect(() => {
+    if (isSuccess) {
+      router.push(origin);
+    }
+  }, [isSuccess, router, origin]);
+
+  if (isLoading) {
+    return <Loader />;
   }
 
-  return (
- 
-      <div className="w-full mt-24 flex justify-center">
-      <div className="flex flex-col items-center gap-2">
-        <Loader2 className="h-8 w-8 animate-spin text-zinc-800" />
-        <h3 className="font-semibold text-xl">Setting up your account...</h3>
-        <p>You will be redirected automatically.</p>
-      </div>
-    </div>
-  
-  );
+  return null;
 };
 
+const AuthCallback = () => (
+  <Suspense fallback={<Loader />}>
+    <Page />
+  </Suspense>
+);
 
-const  AuthCallBack = () => {
-  return (
-    // You could have a loading skeleton as the `fallback` too
-    <Suspense>
-      <Page />
-    </Suspense>
-  )
-}
+// Reusable Loader component for fallback
+const Loader = () => (
+  <div className="w-full mt-24 flex justify-center">
+    <div className="flex flex-col items-center gap-2">
+      <Loader2 className="h-8 w-8 animate-spin text-zinc-800" />
+      <h3 className="font-semibold text-xl">Setting up your account...</h3>
+    </div>
+  </div>
+);
 
-
-export default AuthCallBack;
+export default AuthCallback;
